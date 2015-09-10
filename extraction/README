@@ -1,0 +1,70 @@
+------------------------------------------------------------
+README
+
+The purpose of the programs, genomes, and chain files in
+this folder is to extract sequences from various Drosophila 
+species that can be used in downstream analyses, such as:
+
+- designing pyrosequencing assays
+- sequence comparison of particular features
+
+The relevant programs depend on the liftOver utility from
+UCSC Genome Bioinformatics:
+
+  liftOver <original BED file> map.chain <new BED file> <unliftable original BED file>
+    -minMatch=0.N --> Minimum fraction of bases that must lift (default 0.95)
+
+To extract sequences from the zhr, z30, tsim, and sec genomes,
+use the following syntax (you can also change the minMatch parameter for liftOver):
+
+  sh extraction.sh <BED file> <minMatch [default: 0.95]>
+
+The relevant sequence (*.fa) files will be saved to the same directory
+that the original BED file is in.
+
+------------------------------------------------------------
+EXAMPLE
+
+For example, the file hungate.bed contains a set of regions specific to the
+sequenced D. melanogaster genome (dm3)
+
+sh extraction.sh hungate.bed 0.95
+
+------------------------------------------------------------
+NEWS
+
+May 14, 2013 - distributed this collection
+
+------------------------------------------------------------
+INSTALL
+
+There is no installation required.
+
+------------------------------------------------------------
+AUTHOR
+
+Kraig Stevenson
+PhD candidate
+U of M Bioinformatics Graduate Program
+
+Wittkopp Laboratory
+1061 Natural Science Building
+Ann Arbor, Michigan 48109-1048
+
+kraigrs@umich.edu
+
+------------------------------------------------------------
+COPYING/LICENSE
+
+
+
+UCSC Genome Browser:
+Kent WJ, Sugnet CW, Furey TS, Roskin KM, Pringle TH, Zahler AM, Haussler D. 
+The human genome browser at UCSC. Genome Res. 2002 Jun;12(6):996-1006.
+
+------------------------------------------------------------
+BUGS
+
+May 14, 2013 - no known bugs at this time
+
+------------------------------------------------------------

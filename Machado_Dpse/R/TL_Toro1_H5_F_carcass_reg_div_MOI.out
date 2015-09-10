@@ -1,0 +1,108 @@
+
+R version 3.0.2 (2013-09-25) -- "Frisbee Sailing"
+Copyright (C) 2013 The R Foundation for Statistical Computing
+Platform: x86_64-apple-darwin10.8.0 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> ############################################################################################
+> # script to combine regulatory divergence and mode of inheritance data
+> ############################################################################################
+> 
+> #Usage: R --vanilla --args reg_div MOI dir out < regulatory_divergence_MOI.R > regulatory_divergence_MOI.out
+> 
+> ############################################################################################
+> # functions
+> 
+> ############################################################################################
+> # read in the data, apply cutoff(s) and filters, perform functions
+> 
+> args <- commandArgs(trailingOnly = TRUE);
+> #print(args);
+> reg_div <- read.table(args[1],header=TRUE,sep="\t");
+> MOI <- read.table(args[2],header=TRUE,sep="\t");
+> dir <- args[3];
+> out <- args[4];
+> 
+> #reg_div <- read.table("/Users/kraigrs/Wittkopp/Machado_Dpse/data/TL_Toro1_H6_F_carcass_reg_div.txt",header=TRUE,sep="\t");
+> #MOI <- read.table("/Users/kraigrs/Wittkopp/Machado_Dpse/data/TL_Toro1_H6_F_carcass_MOI.txt",header=TRUE,sep="\t");
+> #dir <- "/Users/kraigrs/Wittkopp/Machado_Dpse/plots";
+> #out <- "TL_Toro1_H6_F_carcass.genes";
+> 
+> data <- merge(reg_div,MOI,by.x=1,by.y=1);
+> 
+> # violin plot of percent cis by regulatory divergence category
+> library(vioplot);
+> 
+> similar <- data$percent_cis[data$MOI=="similar"];
+> par1dominant <- data$percent_cis[data$MOI=="par1dominant"];
+> par2dominant <- data$percent_cis[data$MOI=="par2dominant"];
+> additive <- data$percent_cis[data$MOI=="additive"];
+> underdominant <- data$percent_cis[data$MOI=="underdominant"];
+> overdominant <- data$percent_cis[data$MOI=="overdominant"];
+> 
+> rest <- data$MOI!="additive";
+> data <- cbind(data,rest);
+> 
+> true <- data$percent_cis[data$rest=="TRUE"];
+> false <- data$percent_cis[data$rest=="FALSE"];
+> 
+> avg <- mean(data$percent_cis[which(is.finite(data$percent_cis))]);
+> 
+> pdf(file=paste(dir,"/",out,"_percent_cis_MOI.pdf",sep=""));
+> 
+> #par(mfrow=c(1,2));
+> 
+> temp <- table(data$MOI);
+> parms <- scale(sqrt(temp),center=FALSE);
+> cats <- names(temp);
+> 
+> plot(0:9,rep(avg,10),type='l',xlim=c(0,9),ylim=c(0,1),ylab="% cis",xlab="",xaxt="n",lty=3,main=paste(out," modes of inheritance",sep=""));
+> 
+> if(length(similar) > 0){vioplot(similar[is.finite(similar)],at=1,wex=parms[which(cats=="similar")],add=TRUE,names="",col="cyan",pchMed=19,colMed="gray40");}
+> 
+> if(length(par1dominant) > 0){vioplot(par1dominant[is.finite(par1dominant)],at=2.5,wex=parms[which(cats=="par1dominant")],add=TRUE,names="",col="green",pchMed=19,colMed="gray40");}
+> 
+> if(length(par2dominant) > 0){vioplot(par2dominant[is.finite(par2dominant)],at=4,wex=parms[which(cats=="par2dominant")],add=TRUE,names="",col="magenta",pchMed=19,colMed="gray40");}
+> 
+> if(length(additive) > 0){vioplot(additive[is.finite(additive)],at=5.5,wex=parms[which(cats=="additive")],add=TRUE,names="",col="orange",pchMed=19,colMed="gray40");}
+> 
+> if(length(underdominant) > 0){vioplot(underdominant[is.finite(underdominant)],at=7,wex=parms[which(cats=="underdominant")],add=TRUE,names="",col="red",pchMed=19,colMed="gray40");}
+> 
+> if(length(overdominant) > 0){vioplot(overdominant[is.finite(overdominant)],at=8.5,wex=parms[which(cats=="overdominant")],add=TRUE,names="",col="blue",pchMed=19,colMed="gray40");}
+> 
+> dev.off();
+null device 
+          1 
+> 
+> pdf(file=paste(dir,"/",out,"_percent_cis_additivity.pdf",sep=""));
+> 
+> temp <- table(data$rest);
+> parms <- scale(sqrt(temp),center=FALSE);
+> cats <- names(temp);
+> 
+> plot(0:2,rep(avg,3),type='l',xlim=c(0,2),ylim=c(0,1),ylab="% cis",xlab="",xaxt="n",lty=3,main=paste(out," additivity",sep=""));
+> axis(1,at=c(0.5,1.5),labels=c("A","NA"));
+> 
+> if(length(false) > 0){vioplot(false[is.finite(false)],at=0.5,wex=parms[which(cats=="FALSE")],add=TRUE,col="white",pchMed=16,colMed="gray");}
+> 
+> if(length(true) > 0){vioplot(true[is.finite(true)],at=1.5,wex=parms[which(cats=="TRUE")],add=TRUE,col="white",pchMed=16,colMed="gray");}
+> 
+> dev.off();
+null device 
+          1 
+> 
+> test <- wilcox.test(false,true,alternative="two.sided");
+> test$p.value;
+[1] 1.695519e-25
+> 

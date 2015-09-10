@@ -1,0 +1,70 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1038\cocoasubrtf360
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fswiss\fcharset0 ArialMT;}
+{\colortbl;\red255\green255\blue255;}
+\margl1440\margr1440\vieww13300\viewh13420\viewkind0
+\deftab720
+\pard\pardeftab720\ql\qnatural
+
+\f0\b\fs24 \cf0 Scripts for Quantifying Allele-Specific Expression
+\b0 \
+\
+\pard\pardeftab720\ql\qnatural
+
+\f1\fs26 \cf0 This collection of scripts was used to quantify allele-specific expression in Drosophila, as described in Stevenson et al. 2013 
+\i BMC Genomics 
+\i0 14: 536. They require the following commonly used and publicly available software: Bowtie, SAMtools, BEDtools, the GEM library, and Fast Statistical Alignment (FSA). These programs and custom Perl and R scripts were used to simulate and analyze sequence reads from two strains of 
+\i Drosophila melanogaster
+\i0  and between 
+\i D. melanogaster
+\i0  and 
+\i D. simulans
+\i0 , but can be adapted for use with other genomes. Real sequencing data can be used in place of the simulated sequence reads. Included are scripts to determine the density of differentiating sites and mappability, two important factors that affect accuracy of inferred measures of allele-specific expression. \
+\
+We used these scripts in Stevenson 
+\i et al.
+\i0  2013 
+\i BMC Genomics 
+\i0\b 14
+\b0 :536 as follows:\
+\
+Within-
+\i D.melanogaster
+\i0  comparison:\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\ql\qnatural\pardirnatural
+\cf0 1a). For a particular line of the Drosophila Genetic Reference Panel (DGRP), find all homozygous genotypes (compile_genos.pl)\
+\
+2a). Compare these genotypes to those in the 
+\i Drosophila melanogaster
+\i0  reference genome, looking for sites that differentiate the reference and DGRP (or "alternative") alleles, find these sites, and create an edited version of the genome to match these genotypes (edit_genome.pl)\
+\
+3a). Tile sequence reads across regions of the genome (constitutive exons, in our case, but could be any set of regions). This is done for each allele and on each strand (forward strand and reverse-complementary strand). (tiled_reads.pl)\
+\
+4a). Align sequence reads to genome using Bowtie and get site-specific abundance measurements for each allele using SAMtools (bowtiePipe.pl, samtoolsPipe.pl, pileup_SNP_ASE.pl)\
+\
+5a). Determine the density of differentiating sites, i.e. for each differentiating site, the maximum number of differentiating sites within the length of a sequence read (count_neighbors.pl,\'a0create_windows.pl)\
+\
+6a). Determine site-specific measurements of genome mappability, i.e. ability to uniquely align sequence reads from a particular location to the genome, using the GEM library (get_mappability.pl)\
+\
+Between 
+\i D. melanogaster 
+\i0 and 
+\i D. simulans
+\i0  comparison:\
+\
+1b). Using the genomes of resequenced lines of 
+\i D. melanogaster
+\i0  and 
+\i D. simulans
+\i0  from the McIntyre laboratory at the University of Florida, tile sequence reads across all orthologous exons (generate_reads.pl)\
+\
+2b). Using FSA, perform pairwise alignment of each orthologous exon to determine location of differentiating sites as well as indels (pairwise_aln_FSA.pl,\'a0compare_pairwise.pl,\'a0find_indels.pl)\
+\
+3b). Align sequence reads to genomes, as above in (4a).\
+\
+\pard\pardeftab720\ql\qnatural
+\cf0 4b). Determine density of differentiating sites, as above in (5a).\
+\
+5b). Determine site-specific mappability, as above in (6a).\
+\
+Questions about using these scripts or adapting them for other uses can be sent to Patricia J. Wittkopp <wittkopp@umich.edu> or Kraig Stevenson <kraigrs@umich.com>.}

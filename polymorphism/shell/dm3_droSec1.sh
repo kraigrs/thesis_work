@@ -1,0 +1,29 @@
+#!/bin/sh
+
+# lift
+
+liftOver constitutive_regions_overlap_filtered2.bed dm3ToDroSec1.over.chain constitutive_regions_overlap_filtered2.sec.bed constitutive_regions_overlap_filtered2.sec.un -minMatch=0.5
+
+liftOver constitutive_regions_overlap_filtered2.sec.bed droSec1ToDroSec1_snp_indel.over.chain constitutive_regions_overlap_filtered2.sec_snp_indel.bed constitutive_regions_overlap_filtered2.sec_snp_indel.un -minMatch=0.5
+
+liftOver constitutive_regions_overlap_filtered2.sec.un dm3ToSec_extra.over.chain constitutive_regions_overlap_filtered2.sec_extra.bed constitutive_regions_overlap_filtered2.sec_extra.un -minMatch=0.5
+
+
+# get sequences
+
+perl get_sequences.pl constitutive_regions_overlap_filtered2.sec_snp_indel.bed droSec1_snpindel_GATC.fa constitutive_regions_overlap_filtered2.sec_snp_indel.fa
+
+perl get_sequences.pl constitutive_regions_overlap_filtered2.sec_extra.bed Sec_rsq_k35_extra.fa constitutive_regions_overlap_filtered2.sec_extra.fa
+
+cat constitutive_regions_overlap_filtered2.sec_snp_indel.fa constitutive_regions_overlap_filtered2.sec_extra.fa > constitutive_regions_overlap_filtered2.droSec1.fa
+
+perl get_sequences.pl constitutive_regions_overlap_filtered2.bed ../Dmel/dm3.fa constitutive_regions_overlap_filtered2.dm3.fa
+
+
+# pairwise align
+
+perl pairwise_aln_FSA.pl dm3 droSec1 constitutive_regions_overlap_filtered2.dm3.fa constitutive_regions_overlap_filtered2.droSec1.fa
+
+# find SNPs
+
+perl compare_pairwise.pl constitutive_regions_overlap_filtered2.dm3.dm3_droSec1_fsa.fa constitutive_regions_overlap_filtered2.droSec1.dm3_droSec1_fsa.fa constitutive_regions_overlap_filtered2.dm3_droSec1_fsa.SNPs.txt
